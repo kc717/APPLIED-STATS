@@ -1,0 +1,106 @@
+---
+title: "Week 4"
+author: "Kevin Chen"
+date: "2024-09-20"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r}
+# Set a CRAN mirror (choose any mirror that works for you)
+options(repos = c(CRAN = "https://cran.rstudio.com/"))
+```
+```{r}
+options(repos = c(CRAN = "https://cran.rstudio.com/"))
+```
+
+```{r}
+getwd()
+# Load the CSV file
+my_data <- read.csv("Dataset_123.csv")
+
+# View the first few rows of the dataset
+head(my_data)
+
+
+```
+```{r}
+# Check the structure of the dataset
+str(my_data)
+
+# View summary statistics
+summary(my_data)
+```
+```{r}
+# Load necessary library
+install.packages("dplyr")
+library(dplyr)
+
+
+# Filter the dataset for specific categories in Short_Question_Text and Measure_ID
+filtered_data <- my_data %>%
+  filter(
+    Short_Question_Text %in% c("Poverty", "Crowding") &
+    MeasureID %in% c("POV150", "CROWD")
+  )
+
+# View the filtered data
+head(filtered_data)
+
+```
+
+```{r}
+# View the first few rows
+head(filtered_data)
+
+# Check unique entries in Short_Question_Text
+unique(filtered_data$Short_Question_Text)
+
+# Count occurrences of each category in Short_Question_Text
+table(filtered_data$Short_Question_Text)
+table(filtered_data$MeasureID)
+```
+```{r} 
+# Create a contingency table
+
+contingency_table <- table(filtered_data$MeasureID, filtered_data$Short_Question_Text)
+
+
+# View the table
+print(contingency_table)
+
+```
+
+```{r}
+# Total counts
+total <- sum(contingency_table)
+
+# Prevalence: Proportion of the outcome variable
+prevalence <- sum(contingency_table[2, ]) / total
+
+# Sensitivity
+true_positives <- contingency_table[2, 2]  # TP
+false_negatives <- contingency_table[2, 1]  # FN
+sensitivity <- true_positives / (true_positives + false_negatives)
+
+# Specificity
+true_negatives <- contingency_table[1, 1]  # TN
+false_positives <- contingency_table[1, 2]  # FP
+specificity <- true_negatives / (true_negatives + false_positives)
+
+# Print results
+print(paste("Prevalence:", prevalence))
+print(paste("Sensitivity:", sensitivity))
+print(paste("Specificity:", specificity))
+```
+```{r}
+# Calculate PPV and NPV
+ppv <- true_positives / (true_positives + false_positives)
+npv <- true_negatives / (true_negatives + false_negatives)
+
+# Print PPV and NPV
+print(paste("PPV (Positive Predictive Value):", ppv))
+print(paste("NPV (Negative Predictive Value):", npv))
+```
